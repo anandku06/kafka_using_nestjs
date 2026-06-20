@@ -45,7 +45,25 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
 
+  postgres:
+    image: postgres:16-alpine
+    container_name: eventflowapp-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: eventflowapp
+      POSTGRES_PASSWORD: eventflow_password
+      POSTGRES_DB: eventflowapp
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eventflowapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   zookeeper-data:
   zookeeper-logs:
   kafka-data:
+  postgres-data:
